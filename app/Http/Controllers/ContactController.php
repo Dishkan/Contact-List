@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\Info;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,8 +13,9 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = Contact::paginate(10);
+        $info = Info::all();
 
-        return view('contacts.mycontacts', compact(['contacts']));
+        return view('contacts.mycontacts', compact(['contacts', 'info']));
     }
 
 
@@ -28,15 +30,9 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|max:255|unique:contacts',
             'number' => array(
-                'required:max:15',
-                'regex: (998([\d]{9})$)',
-                'unique:contacts'),
-            'second_number' => array(
-                'nullable:max:15',
                 'regex: (998([\d]{9})$)',
                 'unique:contacts'),
             'email' => 'required|email|unique:contacts',
-            'second_email' => 'nullable|email|unique:contacts'
         ]);
 
         Contact::create($request->all());
@@ -51,10 +47,17 @@ class ContactController extends Controller
 
         $contacts = Contact::where('name', 'LIKE', '%' . $q . '%')
             ->orWhere('number', 'LIKE', '%' . $q . '%')
-            ->orWhere('second_number', 'LIKE', '%' . $q . '%')
             ->orWhere('email', 'LIKE', '%' . $q . '%')
-            ->orWhere('second_email', 'LIKE', '%' . $q . '%')
             ->get();
+
+        $info = Info::where('info_number', 'LIKE', '%' . $q . '%')
+            ->orWhere('info_email', 'LIKE', '%' . $q . '%')
+            ->get();
+
+        if(count($info) > 0) {
+            return view('contacts.search_info')->with(['info' => $info, 'q' => $q])
+                ->withDetails($info)->withQuery($q)->render();
+        }
 
         if (count($contacts) > 0) {
             return view('contacts.search')->with(['contacts' => $contacts, 'q' => $q])
@@ -63,6 +66,7 @@ class ContactController extends Controller
 
             return view('contacts.search_notfound')->withQuery($q)->withMessage('No Details found. Try to search again !');
         }
+
 
     }
 
@@ -87,19 +91,7 @@ class ContactController extends Controller
                 'regex: (998([\d]{9})$)',
                 'unique:contacts,number,' . $contact,
             ),
-            'second_number' => array(
-                'nullable:max:15',
-                'regex: (998([\d]{9})$)',
-                'unique:contacts,number',
-                'unique:contacts,second_number,' . $contact,
-            ),
             'email' => 'required|email|unique:contacts,email,' . $contact,
-            'second_email' => array(
-                'nullable',
-                'email',
-                'unique:contacts,email',
-                'unique:contacts,second_email,' . $contact,
-            ),
         ]);
 
         if ($validator->fails()) {
@@ -114,7 +106,7 @@ class ContactController extends Controller
 
     public function destroy($contact)
     {
-
+        Info::where('contact_id', $contact)->delete();
         Contact::where('id', $contact)->delete();
 
         return redirect('/');

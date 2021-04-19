@@ -5,33 +5,18 @@
         <p> The search results for your query <b> {{ $query }} </b> are :</p>
         <table class="table table-striped">
             <tbody>
-            @foreach($contacts as $contact)
+            @foreach($info as $v)
                 <tr>
                     <th>Name:</th>
-                    <td>{{$contact->name}}</td>
+                    <td>{{$v->contact->name}}</td>
                 </tr>
                 <tr>
-                    <th>Number:</th>
-                    <td>+{{$contact->number}}</td>
+                    <th>Extra Number:</th>
+                    <td>+{{$v->info_number}}</td>
                 </tr>
                 <tr>
-                    <th>Extra number:</th>
-                    <td>
-                        @foreach($contact->info as $v)
-                            {{ $v['info_number'] }},
-                        @endforeach
-                    </td>
-                </tr>
-                <tr>
-                    <th>Email:</th>
-                    <td>{{$contact->email}}</td>
-                </tr>
-                <tr>
-                    <th>Extra email:</th>
-                    <td>
-                        @foreach($contact->info as $v)
-                            {{ $v['info_email'] }},
-                    @endforeach
+                    <th>Extra Email:</th>
+                    <td>{{$v->info_email}}</td>
                 </tr>
                 <tr>
                     <td>

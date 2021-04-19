@@ -19,3 +19,5 @@ Route::resource('/contacts', 'App\Http\Controllers\ContactController');
 
 Route::any('/contacts/search', '\App\Http\Controllers\ContactController@search');
 
+Route::resource('/info', 'App\Http\Controllers\InfoController');
+

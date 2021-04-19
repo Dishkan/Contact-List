@@ -18,7 +18,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="panel panel-default" style="width: 120%;">
+                <div class="panel" style="width: 100%;">
                     <div class="panel-heading">
                         Current Contacts
                     </div>
@@ -31,11 +31,10 @@
                         <table class="table table-striped task-table">
                             <thead style="font-size: 88%;">
                             <th>Name</th>
-                            <th>Sign</th>
                             <th>Phone number</th>
-                            <th>Second number</th>
+                            <th>Extra number</th>
                             <th>Email</th>
-                            <th>Second email</th>
+                            <th>Extra email</th>
                             </thead>
                             <tbody>
                             @foreach ($contacts as $contact)
@@ -43,31 +42,24 @@
                                     <td class="table-text">
                                         <div>{{ $contact->name }}</div>
                                     </td>
-                                    <td style="text-align: center;" class="table-text">
-                                        <div>+</div>
-                                    </td>
                                     <td class="table-text">
                                         <div>{{ $contact->number }}</div>
                                     </td>
-                                    <td style="text-align: center;" class="table-text">
+                                    <td class="table-text">
                                         <div>
-                                            @if($contact->second_number)
-                                                {{ $contact->second_number }}
-                                            @else
-                                                No second number
-                                            @endif
+                                            @foreach($contact->info as $value)
+                                                {{$value['info_number']}}
+                                            @endforeach
                                         </div>
                                     </td>
                                     <td class="table-text">
                                         <div>{{ $contact->email }}</div>
                                     </td>
-                                    <td style="text-align: center;" class="table-text">
+                                    <td class="table-text">
                                         <div>
-                                            @if($contact->second_email)
-                                                {{ $contact->second_email }}
-                                            @else
-                                                No second email
-                                            @endif
+                                            @foreach($contact->info as $value)
+                                                {{$value['info_email']}}
+                                            @endforeach
                                         </div>
                                     </td>
 
@@ -99,6 +91,24 @@
                                         </button>
                                     </a>
                                 </td>
+                                @if(count($contacts) != 0)
+
+                                    <td>
+                                        <a href="{{ route('info.create') }}">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fa fa-btn fa-create"></i> Add extra info
+                                            </button>
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ route('info.index') }}">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fa fa-btn fa-create"></i> Edit extra info
+                                            </button>
+                                        </a>
+                                    </td>
+                                @endif
                             </tr>
                             @if ($contacts->lastPage() > 1)
                                 <tr>
