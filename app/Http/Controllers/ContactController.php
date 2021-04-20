@@ -12,10 +12,9 @@ class ContactController extends Controller
 
     public function index()
     {
-        $contacts = Contact::paginate(10);
-        $info = Info::all();
+        $contacts = Contact::paginate(15);
 
-        return view('contacts.mycontacts', compact(['contacts', 'info']));
+        return view('contacts.mycontacts', compact(['contacts']));
     }
 
 
