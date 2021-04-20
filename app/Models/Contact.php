@@ -9,7 +9,7 @@ class Contact extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'number', 'second_number', 'email', 'second_email'];
+    protected $fillable = ['name', 'number', 'email'];
 
     public function info() {
         return $this->hasMany(Info::class, 'contact_id', 'id');
